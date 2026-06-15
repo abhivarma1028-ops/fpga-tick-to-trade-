@@ -47,7 +47,7 @@ bind itch_parser itch_parser_sva u_itch_parser_sva (
 module order_book_m2_sva (
     input logic        clk,
     input logic        rst_n,
-    input logic        state,        // 0 = IDLE, 1 = RESCAN
+    input logic [1:0]  state,        // 0 = IDLE, 1 = LOOKUP, 2 = RESCAN
     input logic        msg_ready,
     input logic        book_valid,
     input logic [31:0] bid_p0,
@@ -59,13 +59,13 @@ module order_book_m2_sva (
     input logic        bid_some,     // bid has >= 1 level
     input logic        ask_some      // ask has >= 1 level
 );
-    // msg_ready is exactly "in IDLE"; never ready during a rescan
+    // msg_ready is exactly "in IDLE" (0); low during LOOKUP (1) and RESCAN (2)
     a_ready_iff_idle: assert property (@(posedge clk) disable iff (!rst_n)
-        msg_ready == (state == 1'b0))
+        msg_ready == (state == 2'd0))
         else $error("[SVA order_book] msg_ready != (state==IDLE)");
 
     a_no_accept_in_rescan: assert property (@(posedge clk) disable iff (!rst_n)
-        (state == 1'b1) |-> !msg_ready)
+        (state == 2'd2) |-> !msg_ready)
         else $error("[SVA order_book] msg_ready high during RESCAN");
 
     // book_valid requires a live order on both sides
@@ -84,7 +84,7 @@ module order_book_m2_sva (
 
     // Coverage: a rescan was entered, and a multi-level book was reached
     c_rescan_entered: cover property (@(posedge clk) disable iff (!rst_n)
-        (state == 1'b0) ##1 (state == 1'b1));
+        (state == 2'd2));
     c_two_bid_levels: cover property (@(posedge clk) disable iff (!rst_n) bid_two);
 endmodule
 
@@ -175,6 +175,50 @@ module latency_counter_sva (
     c_axil_read: cover property (@(posedge clk) disable iff (!rst_n)
         (s_axil_rvalid && s_axil_rready));
 endmodule
+
+// -----------------------------------------------------------------------------
+// risk_check : pre-trade gate contract
+// -----------------------------------------------------------------------------
+module risk_check_sva #(
+    parameter int MAX_ORDER_SIZE = 500
+)(
+    input logic        clk,
+    input logic        rst_n,
+    input logic        halt,
+    input logic        in_valid,
+    input logic [31:0] in_size,
+    input logic        out_valid,
+    input logic        reject_valid
+);
+    // Never pass an order that wasn't proposed
+    a_out_implies_in: assert property (@(posedge clk) disable iff (!rst_n)
+        out_valid |-> in_valid)
+        else $error("[SVA risk] out_valid without in_valid");
+
+    // Kill switch blocks everything
+    a_halt_blocks: assert property (@(posedge clk) disable iff (!rst_n)
+        halt |-> !out_valid)
+        else $error("[SVA risk] order passed while halted");
+
+    // An accepted order never exceeds the max size
+    a_size_ok: assert property (@(posedge clk) disable iff (!rst_n)
+        out_valid |-> (in_size <= MAX_ORDER_SIZE))
+        else $error("[SVA risk] oversized order accepted");
+
+    // reject_valid is exactly a blocked proposal
+    a_reject_def: assert property (@(posedge clk) disable iff (!rst_n)
+        reject_valid == (in_valid && !out_valid))
+        else $error("[SVA risk] reject_valid mismatch");
+
+    c_reject:  cover property (@(posedge clk) disable iff (!rst_n) reject_valid);
+    c_accept:  cover property (@(posedge clk) disable iff (!rst_n) out_valid);
+endmodule
+
+bind risk_check risk_check_sva u_risk_check_sva (
+    .clk(clk), .rst_n(rst_n), .halt(halt),
+    .in_valid(in_valid), .in_size(in_size),
+    .out_valid(out_valid), .reject_valid(reject_valid)
+);
 
 bind latency_counter latency_counter_sva u_latency_counter_sva (
     .clk           (clk),

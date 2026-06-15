@@ -35,6 +35,7 @@ module itch_parser (
     output logic        m_valid,
     input  logic        m_ready,
     output logic [7:0]  msg_type,
+    output logic [15:0] stock_locate,    // symbol id (header bytes 1-2) — multi-symbol routing
     output logic [47:0] timestamp,
     output logic [63:0] order_ref,      // original/target order reference
     output logic [63:0] new_order_ref,  // Replace(U): the NEW ref; else == order_ref
@@ -55,6 +56,7 @@ module itch_parser (
     // -----------------------------------------------------------------------
     logic [5:0]  byte_cnt;
     logic [7:0]  msg_type_r;
+    logic [15:0] loc_sr;
     logic [47:0] ts_sr;
     logic [63:0] ref_sr;
     logic [63:0] new_ref_sr;
@@ -81,6 +83,7 @@ module itch_parser (
     // Combinational "next" values — include the current incoming byte.
     // Field offsets past the common header (byte >= 19) depend on the type.
     // -----------------------------------------------------------------------
+    logic [15:0] loc_nxt;
     logic [47:0] ts_nxt;
     logic [63:0] ref_nxt;
     logic [63:0] new_ref_nxt;
@@ -89,6 +92,7 @@ module itch_parser (
     logic        side_nxt;
 
     always_comb begin
+        loc_nxt     = loc_sr;
         ts_nxt      = ts_sr;
         ref_nxt     = ref_sr;
         new_ref_nxt = new_ref_sr;
@@ -97,7 +101,11 @@ module itch_parser (
         side_nxt    = side_r;
 
         if (rx) begin
-            if (byte_cnt >= 6'd5 && byte_cnt <= 6'd10) begin
+            if (byte_cnt == 6'd1 || byte_cnt == 6'd2) begin
+                // Stock locate (2B) — common header, all types
+                loc_nxt = {loc_sr[7:0], s_axis_tdata};
+            end
+            else if (byte_cnt >= 6'd5 && byte_cnt <= 6'd10) begin
                 // Timestamp (6B) — common to all types
                 ts_nxt = {ts_sr[39:0], s_axis_tdata};
             end
@@ -148,6 +156,7 @@ module itch_parser (
         if (!rst_n) begin
             byte_cnt        <= '0;
             msg_type_r      <= '0;
+            loc_sr          <= '0;
             ts_sr           <= '0;
             ref_sr          <= '0;
             new_ref_sr      <= '0;
@@ -168,6 +177,7 @@ module itch_parser (
             // unaccepted one.
             if (rx) begin
                 // Advance shift registers with the current byte included
+                loc_sr     <= loc_nxt;
                 ts_sr      <= ts_nxt;
                 ref_sr     <= ref_nxt;
                 new_ref_sr <= new_ref_nxt;
@@ -184,6 +194,7 @@ module itch_parser (
                     if (is_supported) begin
                         m_valid       <= 1'b1;
                         msg_type      <= msg_type_r;
+                        stock_locate  <= loc_nxt;
                         timestamp     <= ts_nxt;
                         order_ref     <= ref_nxt;
                         new_order_ref <= is_replace ? new_ref_nxt : ref_nxt;

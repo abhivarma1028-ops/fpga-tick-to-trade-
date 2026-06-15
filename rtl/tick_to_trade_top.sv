@@ -1,6 +1,7 @@
-// Tick-to-Trade Top — wires parser → book → strategy → decision output
+// Tick-to-Trade Top — wires parser → book → strategy → risk → decision output
 // AXI-Stream slave in (ITCH bytes), AXI-Stream master out (decision packets)
 // AXI-Lite slave out — latency histogram (see latency_counter.sv for reg map)
+// Pre-trade risk check (SEC Rule 15c3-5) gates the decision; see risk_check.sv
 
 module tick_to_trade_top (
     input  logic        clk,
@@ -11,6 +12,11 @@ module tick_to_trade_top (
     output logic        s_axis_tready,
     input  logic [7:0]  s_axis_tdata,
     input  logic        s_axis_tlast,
+
+    // Risk control
+    input  logic        halt,          // kill switch: 1 = block all orders
+    output logic        risk_reject,   // an order was blocked by a risk check
+    output logic [2:0]  risk_reason,   // why (see risk_check.sv)
 
     // Decision stream out (to DMA → PS → IBKR bridge)
     output logic        m_axis_tvalid,
@@ -64,6 +70,9 @@ module tick_to_trade_top (
         .m_valid        (parser_valid),
         .m_ready        (book_ready),
         .msg_type       (msg_type),
+        /* verilator lint_off PINCONNECTEMPTY */
+        .stock_locate   (),   // single-symbol top: routing not used
+        /* verilator lint_on PINCONNECTEMPTY */
         .timestamp      (timestamp),
         .order_ref      (order_ref),
         .new_order_ref  (new_order_ref),
@@ -132,7 +141,59 @@ module tick_to_trade_top (
     );
 
     // -----------------------------------------------------------------------
-    // Latency counter
+    // Pre-trade risk check (SEC Rule 15c3-5) — zero-latency combinational gate.
+    // Reference price for the collar is the book mid.
+    // -----------------------------------------------------------------------
+    logic        risk_valid_c;
+    logic        risk_action_c;
+    logic [31:0] risk_price_c, risk_size_c;
+    logic        risk_reject_c;
+    logic [2:0]  risk_reason_c;
+    wire  [31:0] mid_price = (bbid_p + bask_p) >> 1;
+
+    risk_check u_risk (
+        .clk          (clk),
+        .rst_n        (rst_n),
+        .halt         (halt),
+        .in_valid     (dec_valid),
+        .in_action    (action),
+        .in_price     (order_price),
+        .in_size      (order_size),
+        .ref_price    (mid_price),
+        .out_valid    (risk_valid_c),
+        .out_action   (risk_action_c),
+        .out_price    (risk_price_c),
+        .out_size     (risk_size_c),
+        .reject_valid (risk_reject_c),
+        .reject_reason(risk_reason_c)
+    );
+
+    // Register risk outputs one cycle to close output timing (OBUF + 2 ns constraint).
+    // Adds one tick of latency on risk_reject/risk_reason and the decision stream.
+    logic        risk_valid;
+    logic        risk_action;
+    logic [31:0] risk_price, risk_size;
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            risk_valid   <= 1'b0;
+            risk_action  <= 1'b0;
+            risk_price   <= '0;
+            risk_size    <= '0;
+            risk_reject  <= 1'b0;
+            risk_reason  <= 3'd0;
+        end else begin
+            risk_valid   <= risk_valid_c;
+            risk_action  <= risk_action_c;
+            risk_price   <= risk_price_c;
+            risk_size    <= risk_size_c;
+            risk_reject  <= risk_reject_c;
+            risk_reason  <= risk_reason_c;
+        end
+    end
+
+    // -----------------------------------------------------------------------
+    // Latency counter (measures up to the risk-approved order)
     // -----------------------------------------------------------------------
     // msg_start: first byte of each new message
     logic msg_start;
@@ -152,7 +213,7 @@ module tick_to_trade_top (
         .clk              (clk),
         .rst_n            (rst_n),
         .msg_start        (msg_start),
-        .decision_valid   (dec_valid),
+        .decision_valid   (risk_valid),
         .s_axil_awaddr    (s_axil_awaddr),
         .s_axil_awvalid   (s_axil_awvalid),
         .s_axil_awready   (s_axil_awready),
@@ -173,10 +234,19 @@ module tick_to_trade_top (
     );
 
     // -----------------------------------------------------------------------
-    // Decision output — pack into AXI-Stream beat
+    // Decision output — pack the RISK-APPROVED order into an AXI-Stream beat.
+    // Driven from the registered risk outputs so OBUF paths start at a FF.
     // -----------------------------------------------------------------------
-    assign m_axis_tvalid = dec_valid;
-    assign m_axis_tdata  = {{7{1'b0}}, action, order_price, order_size};
-    assign m_axis_tlast  = dec_valid; // one beat per decision
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            m_axis_tvalid <= 1'b0;
+            m_axis_tlast  <= 1'b0;
+            m_axis_tdata  <= '0;
+        end else begin
+            m_axis_tvalid <= risk_valid;
+            m_axis_tlast  <= risk_valid;
+            m_axis_tdata  <= {{7{1'b0}}, risk_action, risk_price, risk_size};
+        end
+    end
 
 endmodule

@@ -20,6 +20,8 @@ module tb_tick_to_trade_top;
     // ---- DUT I/O -----------------------------------------------------------
     logic        s_axis_tvalid, s_axis_tready, s_axis_tlast;
     logic [7:0]  s_axis_tdata;
+    logic        halt, risk_reject;
+    logic [2:0]  risk_reason;
     logic        m_axis_tvalid, m_axis_tready, m_axis_tlast;
     logic [71:0] m_axis_tdata;
     // AXI-Lite
@@ -36,6 +38,7 @@ module tb_tick_to_trade_top;
         .clk(clk), .rst_n(rst_n),
         .s_axis_tvalid(s_axis_tvalid), .s_axis_tready(s_axis_tready),
         .s_axis_tdata(s_axis_tdata),   .s_axis_tlast(s_axis_tlast),
+        .halt(halt), .risk_reject(risk_reject), .risk_reason(risk_reason),
         .m_axis_tvalid(m_axis_tvalid), .m_axis_tready(m_axis_tready),
         .m_axis_tdata(m_axis_tdata),   .m_axis_tlast(m_axis_tlast),
         .s_axil_awaddr(s_axil_awaddr), .s_axil_awvalid(s_axil_awvalid), .s_axil_awready(s_axil_awready),
@@ -119,6 +122,7 @@ module tb_tick_to_trade_top;
     initial begin
         // idle
         s_axis_tvalid = 0; s_axis_tdata = 0; s_axis_tlast = 0;
+        halt = 0;
         m_axis_tready = 1;
         s_axil_awaddr = 0; s_axil_awvalid = 0; s_axil_wdata = 0; s_axil_wstrb = 0;
         s_axil_wvalid = 0; s_axil_bready = 0;

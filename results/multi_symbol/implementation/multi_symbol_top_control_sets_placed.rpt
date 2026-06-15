@@ -1,0 +1,289 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
+| Date         : Mon Jun 15 18:21:26 2026
+| Host         : VM running 64-bit Ubuntu 26.04 LTS
+| Command      : report_control_sets -verbose -file multi_symbol_top_control_sets_placed.rpt
+| Design       : multi_symbol_top
+| Device       : xcu200
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Total control sets                                       |   211 |
+|    Minimum number of control sets                        |   211 |
+|    Addition due to synthesis replication                 |     0 |
+|    Addition due to physical synthesis replication        |     0 |
+| Unused register locations in slices containing registers |    60 |
++----------------------------------------------------------+-------+
+* Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
+** Run report_qor_suggestions for automated merging and remapping suggestions
+
+
+2. Histogram
+------------
+
++--------------------+-------+
+|       Fanout       | Count |
++--------------------+-------+
+| Total control sets |   211 |
+| >= 0 to < 4        |     8 |
+| >= 4 to < 6        |     1 |
+| >= 6 to < 8        |     0 |
+| >= 8 to < 10       |    18 |
+| >= 10 to < 12      |     5 |
+| >= 12 to < 14      |     1 |
+| >= 14 to < 16      |     3 |
+| >= 16              |   175 |
++--------------------+-------+
+* Control sets can be remapped at either synth_design or opt_design
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |               4 |            4 |
+| No           | No                    | Yes                    |            1069 |          683 |
+| No           | Yes                   | No                     |               0 |            0 |
+| Yes          | No                    | No                     |            1025 |          328 |
+| Yes          | No                    | Yes                    |            6854 |         1696 |
+| Yes          | Yes                   | No                     |              32 |           29 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++----------------+-------------------------------------------------------------+----------------------------+------------------+----------------+--------------+
+|  Clock Signal  |                        Enable Signal                        |      Set/Reset Signal      | Slice Load Count | Bel Load Count | Bels / Slice |
++----------------+-------------------------------------------------------------+----------------------------+------------------+----------------+--------------+
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_ask_lv[cnt][2]_i_1_n_0          | rst_n_IBUF_inst/O          |                3 |              3 |         1.00 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_bid_lv[cnt][2]_i_1_n_0          | rst_n_IBUF_inst/O          |                2 |              3 |         1.50 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_ask_lv[cnt][2]_i_1__2_n_0       | rst_n_IBUF_inst/O          |                2 |              3 |         1.50 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_bid_lv[cnt][2]_i_1__2_n_0       | rst_n_IBUF_inst/O          |                2 |              3 |         1.50 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_bid_lv[cnt][2]_i_1__1_n_0       | rst_n_IBUF_inst/O          |                2 |              3 |         1.50 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_ask_lv[cnt][2]_i_1__1_n_0       | rst_n_IBUF_inst/O          |                3 |              3 |         1.00 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_ask_lv[cnt][2]_i_1__0_n_0       | rst_n_IBUF_inst/O          |                2 |              3 |         1.50 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_bid_lv[cnt][2]_i_1__0_n_0       | rst_n_IBUF_inst/O          |                2 |              3 |         1.50 |
+|  clk_IBUF_BUFG |                                                             |                            |                4 |              4 |         1.00 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/proc_idx[7]_i_1__1_n_0               | rst_n_IBUF_inst/O          |                2 |              8 |         4.00 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/i___316_n_0                          |                            |                1 |              8 |         8.00 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/i___6_n_0                            | rst_n_IBUF_inst/O          |                7 |              8 |         1.14 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/proc_idx[7]_i_1__0_n_0               | rst_n_IBUF_inst/O          |                2 |              8 |         4.00 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/i___316_n_0                          |                            |                1 |              8 |         8.00 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/m_valid_reg                          | rst_n_IBUF_inst/O          |                8 |              8 |         1.00 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/i___6_n_0                            | rst_n_IBUF_inst/O          |                7 |              8 |         1.14 |
+|  clk_IBUF_BUFG | u_parser/msg_type_r[0]                                      | rst_n_IBUF_inst/O          |                3 |              8 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/proc_idx[7]_i_1__2_n_0               | rst_n_IBUF_inst/O          |                2 |              8 |         4.00 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/i___316_n_0                          |                            |                1 |              8 |         8.00 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/i___1_n_0                            | rst_n_IBUF_inst/O          |                6 |              8 |         1.33 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/i___317_n_0                          |                            |                1 |              8 |         8.00 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/proc_idx[7]_i_1_n_0                  | rst_n_IBUF_inst/O          |                2 |              8 |         4.00 |
+|  clk_IBUF_BUFG | u_lat/aw_active                                             | rst_n_IBUF_inst/O          |                1 |              9 |         9.00 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_addr[8]_i_1__1_n_0              | rst_n_IBUF_inst/O          |                2 |              9 |         4.50 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_addr[8]_i_1_n_0                 | rst_n_IBUF_inst/O          |                2 |              9 |         4.50 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_addr[8]_i_1__2_n_0              | rst_n_IBUF_inst/O          |                3 |              9 |         3.00 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_addr[8]_i_1__0_n_0              | rst_n_IBUF_inst/O          |                3 |              9 |         3.00 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/i___0_n_0                            | rst_n_IBUF_inst/O          |                8 |             10 |         1.25 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/i___7_n_0                            | rst_n_IBUF_inst/O          |                9 |             10 |         1.11 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/i___0_n_0                            | rst_n_IBUF_inst/O          |                9 |             10 |         1.11 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/i___0_n_0                            | rst_n_IBUF_inst/O          |                8 |             10 |         1.25 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/i___6_n_0                            | rst_n_IBUF_inst/O          |               11 |             11 |         1.00 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/state[1]_i_1__1_n_0                  | rst_n_IBUF_inst/O          |                8 |             13 |         1.62 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/state[1]_i_1__0_n_0                  | rst_n_IBUF_inst/O          |                7 |             14 |         2.00 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/state[1]_i_1_n_0                     | rst_n_IBUF_inst/O          |               11 |             14 |         1.27 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/state[1]_i_1__2_n_0                  | rst_n_IBUF_inst/O          |                9 |             14 |         1.56 |
+|  clk_IBUF_BUFG | u_lat/ar_active0                                            | rst_n_IBUF_inst/O          |                3 |             19 |         6.33 |
+|  clk_IBUF_BUFG | u_risk/m_axis_tlast_OBUF                                    | rst_n_IBUF_inst/O          |                4 |             31 |         7.75 |
+|  clk_IBUF_BUFG | u_lat/hist[11][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               22 |             32 |         1.45 |
+|  clk_IBUF_BUFG | u_lat/hist[0][31]_i_1_n_0                                   | rst_n_IBUF_inst/O          |               26 |             32 |         1.23 |
+|  clk_IBUF_BUFG | u_lat/hist[62][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               21 |             32 |         1.52 |
+|  clk_IBUF_BUFG | u_lat/hist[61][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[10][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               23 |             32 |         1.39 |
+|  clk_IBUF_BUFG | u_strategy/cooldown_cnt[31]_i_1_n_0                         | rst_n_IBUF_inst/O          |                3 |             32 |        10.67 |
+|  clk_IBUF_BUFG | u_lat/hist[60][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               23 |             32 |         1.39 |
+|  clk_IBUF_BUFG | u_lat/hist[12][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               20 |             32 |         1.60 |
+|  clk_IBUF_BUFG | u_lat/hist[13][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               21 |             32 |         1.52 |
+|  clk_IBUF_BUFG | u_lat/hist[14][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               22 |             32 |         1.45 |
+|  clk_IBUF_BUFG | u_lat/hist[15][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               21 |             32 |         1.52 |
+|  clk_IBUF_BUFG | u_lat/hist[16][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[17][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               23 |             32 |         1.39 |
+|  clk_IBUF_BUFG | u_lat/hist[18][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               26 |             32 |         1.23 |
+|  clk_IBUF_BUFG | u_lat/hist[8][31]_i_1_n_0                                   | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/ask_lv[price][3][31]_i_1__2_n_0      | rst_n_IBUF_inst/O          |               16 |             32 |         2.00 |
+|  clk_IBUF_BUFG | u_lat/s_axil_rdata[31]_i_1_n_0                              | rst_n_IBUF_inst/O          |               12 |             32 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/i___7_n_0                            | rst_n_IBUF_inst/O          |               10 |             32 |         3.20 |
+|  clk_IBUF_BUFG | u_lat/last_latency_cycles[31]_i_1_n_0                       | rst_n_IBUF_inst/O          |                4 |             32 |         8.00 |
+|  clk_IBUF_BUFG | u_lat/hist[9][31]_i_1_n_0                                   | rst_n_IBUF_inst/O          |               20 |             32 |         1.60 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_ask_lv[price][0][31]_i_1__2_n_0 | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_ask_lv[price][1][31]_i_1__2_n_0 | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_ask_lv[price][2][31]_i_1__2_n_0 | rst_n_IBUF_inst/O          |                9 |             32 |         3.56 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_ask_lv[price][3][31]_i_1__2_n_0 | rst_n_IBUF_inst/O          |               16 |             32 |         2.00 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_ask_lv[size][3][31]_i_1__2_n_0  | rst_n_IBUF_inst/O          |               12 |             32 |         2.67 |
+|  clk_IBUF_BUFG | u_lat/hist[63][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[7][31]_i_1_n_0                                   | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_bid_lv[price][0][31]_i_1__2_n_0 | rst_n_IBUF_inst/O          |               15 |             32 |         2.13 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_bid_lv[price][1][31]_i_1__2_n_0 | rst_n_IBUF_inst/O          |                8 |             32 |         4.00 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_bid_lv[price][2][31]_i_1__2_n_0 | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_bid_lv[price][3][31]_i_1__2_n_0 | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_bid_lv[size][3][31]_i_1__2_n_0  | rst_n_IBUF_inst/O          |               10 |             32 |         3.20 |
+|  clk_IBUF_BUFG | u_lat/hist[6][31]_i_1_n_0                                   | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[22][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               26 |             32 |         1.23 |
+|  clk_IBUF_BUFG | u_parser/msg_type[7]_i_1_n_0                                | u_parser/price[31]_i_1_n_0 |               29 |             32 |         1.10 |
+|  clk_IBUF_BUFG | u_lat/hist[48][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               26 |             32 |         1.23 |
+|  clk_IBUF_BUFG | u_lat/hist[38][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               23 |             32 |         1.39 |
+|  clk_IBUF_BUFG | u_lat/hist[39][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[3][31]_i_1_n_0                                   | rst_n_IBUF_inst/O          |               28 |             32 |         1.14 |
+|  clk_IBUF_BUFG | u_lat/hist[40][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               20 |             32 |         1.60 |
+|  clk_IBUF_BUFG | u_lat/hist[41][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[42][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               21 |             32 |         1.52 |
+|  clk_IBUF_BUFG | u_lat/hist[43][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[44][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[45][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[46][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[47][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[37][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               22 |             32 |         1.45 |
+|  clk_IBUF_BUFG | u_lat/hist[49][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[4][31]_i_1_n_0                                   | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[50][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[51][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               27 |             32 |         1.19 |
+|  clk_IBUF_BUFG | u_lat/hist[52][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               23 |             32 |         1.39 |
+|  clk_IBUF_BUFG | u_lat/hist[53][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[54][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               29 |             32 |         1.10 |
+|  clk_IBUF_BUFG | u_lat/hist[55][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[56][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               26 |             32 |         1.23 |
+|  clk_IBUF_BUFG | u_lat/hist[57][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[5][31]_i_1_n_0                                   | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[1][31]_i_1_n_0                                   | rst_n_IBUF_inst/O          |               22 |             32 |         1.45 |
+|  clk_IBUF_BUFG | u_lat/hist[20][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               27 |             32 |         1.19 |
+|  clk_IBUF_BUFG | u_lat/hist[21][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               23 |             32 |         1.39 |
+|  clk_IBUF_BUFG | u_lat/hist[23][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               21 |             32 |         1.52 |
+|  clk_IBUF_BUFG | u_lat/hist[24][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[25][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               26 |             32 |         1.23 |
+|  clk_IBUF_BUFG | u_lat/hist[26][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[27][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[28][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[29][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[19][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               26 |             32 |         1.23 |
+|  clk_IBUF_BUFG | u_lat/hist[2][31]_i_1_n_0                                   | rst_n_IBUF_inst/O          |               20 |             32 |         1.60 |
+|  clk_IBUF_BUFG | u_lat/hist[30][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               23 |             32 |         1.39 |
+|  clk_IBUF_BUFG | u_lat/hist[31][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[32][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               22 |             32 |         1.45 |
+|  clk_IBUF_BUFG | u_lat/hist[33][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               21 |             32 |         1.52 |
+|  clk_IBUF_BUFG | u_lat/hist[34][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               25 |             32 |         1.28 |
+|  clk_IBUF_BUFG | u_lat/hist[59][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               27 |             32 |         1.19 |
+|  clk_IBUF_BUFG | u_lat/hist[35][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[36][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_lat/hist[58][31]_i_1_n_0                                  | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_bid_lv[price][2][31]_i_1__0_n_0 | rst_n_IBUF_inst/O          |               11 |             32 |         2.91 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_ask_lv[price][0][31]_i_1__0_n_0 | rst_n_IBUF_inst/O          |               15 |             32 |         2.13 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_ask_lv[price][1][31]_i_1__0_n_0 | rst_n_IBUF_inst/O          |               11 |             32 |         2.91 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_ask_lv[price][2][31]_i_1__0_n_0 | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_ask_lv[price][3][31]_i_1__0_n_0 | rst_n_IBUF_inst/O          |               15 |             32 |         2.13 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_ask_lv[price][1][31]_i_1_n_0    | rst_n_IBUF_inst/O          |               11 |             32 |         2.91 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_ask_lv[size][3][31]_i_1__0_n_0  | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_bid_lv[price][0][31]_i_1__0_n_0 | rst_n_IBUF_inst/O          |               15 |             32 |         2.13 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_bid_lv[price][1][31]_i_1__0_n_0 | rst_n_IBUF_inst/O          |               10 |             32 |         3.20 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/i___7_n_0                            | rst_n_IBUF_inst/O          |               12 |             32 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_bid_lv[price][3][31]_i_1__0_n_0 | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_ask_lv[price][0][31]_i_1_n_0    | rst_n_IBUF_inst/O          |               15 |             32 |         2.13 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_bid_lv[size][3][31]_i_1__0_n_0  | rst_n_IBUF_inst/O          |               12 |             32 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/E[0]                                 | rst_n_IBUF_inst/O          |                9 |             32 |         3.56 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/i___8_n_0                            | rst_n_IBUF_inst/O          |                9 |             32 |         3.56 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/i___6__31_n_0                        | rst_n_IBUF_inst/O          |               23 |             32 |         1.39 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/ask_lv[price][2][31]_i_1__1_n_0      | rst_n_IBUF_inst/O          |               12 |             32 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/ask_lv[price][3][31]_i_1__1_n_0      | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/ask_lv[size][3][31]_i_1__0_n_0       | rst_n_IBUF_inst/O          |               21 |             32 |         1.52 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_bid_lv[price][0][31]_i_1_n_0    | rst_n_IBUF_inst/O          |               16 |             32 |         2.00 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_bid_lv[price][1][31]_i_1_n_0    | rst_n_IBUF_inst/O          |               12 |             32 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_bid_lv[price][2][31]_i_1_n_0    | rst_n_IBUF_inst/O          |               11 |             32 |         2.91 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_bid_lv[price][3][31]_i_1_n_0    | rst_n_IBUF_inst/O          |               12 |             32 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_ask_lv[size][3][31]_i_1_n_0     | rst_n_IBUF_inst/O          |               11 |             32 |         2.91 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_bid_lv[size][3][31]_i_1_n_0     | rst_n_IBUF_inst/O          |               11 |             32 |         2.91 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/ask_lv[price][2][31]_i_1__0_n_0      | rst_n_IBUF_inst/O          |               11 |             32 |         2.91 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/ask_lv[price][3][31]_i_1__0_n_0      | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/ask_lv[size][3][31]_i_1__1_n_0       | rst_n_IBUF_inst/O          |               18 |             32 |         1.78 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/bid_lv[price][0][31]_i_1__0_n_0      | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/bid_lv[price][2][31]_i_1__0_n_0      | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/bid_lv[price][3][31]_i_1__0_n_0      | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/bid_lv[size][3][31]_i_1__0_n_0       | rst_n_IBUF_inst/O          |               19 |             32 |         1.68 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/i___1_n_0                            | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_ask_lv[price][3][31]_i_1_n_0    | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_ask_lv[price][2][31]_i_1_n_0    | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/i___5__31_n_0                        | rst_n_IBUF_inst/O          |               23 |             32 |         1.39 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/ask_lv[size][3][31]_i_1__2_n_0       | rst_n_IBUF_inst/O          |               20 |             32 |         1.60 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/bid_lv[price][0][31]_i_1__1_n_0      | rst_n_IBUF_inst/O          |               26 |             32 |         1.23 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_bid_lv[price][2][31]_i_1__1_n_0 | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/bid_lv[price][2][31]_i_1_n_0         | rst_n_IBUF_inst/O          |               16 |             32 |         2.00 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_bid_lv[price][3][31]_i_1__1_n_0 | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/bid_lv[price][0][31]_i_1_n_0         | rst_n_IBUF_inst/O          |               23 |             32 |         1.39 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_bid_lv[size][3][31]_i_1__1_n_0  | rst_n_IBUF_inst/O          |                9 |             32 |         3.56 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/ask_lv[size][3][31]_i_1_n_0          | rst_n_IBUF_inst/O          |               19 |             32 |         1.68 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/ask_lv[price][2][31]_i_1__2_n_0      | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_bid_lv[price][1][31]_i_1__1_n_0 | rst_n_IBUF_inst/O          |               15 |             32 |         2.13 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/ask_lv[price][3][31]_i_1_n_0         | rst_n_IBUF_inst/O          |               12 |             32 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/bid_lv[price][0][31]_i_1__2_n_0      | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/bid_lv[price][2][31]_i_1__2_n_0      | rst_n_IBUF_inst/O          |               17 |             32 |         1.88 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/bid_lv[price][3][31]_i_1__2_n_0      | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/bid_lv[size][3][31]_i_1__2_n_0       | rst_n_IBUF_inst/O          |               19 |             32 |         1.68 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/i___1_n_0                            | rst_n_IBUF_inst/O          |               21 |             32 |         1.52 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/ask_lv[price][2][31]_i_1_n_0         | rst_n_IBUF_inst/O          |               16 |             32 |         2.00 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/i___5__31_n_0                        | rst_n_IBUF_inst/O          |               24 |             32 |         1.33 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_bid_lv[price][0][31]_i_1__1_n_0 | rst_n_IBUF_inst/O          |               18 |             32 |         1.78 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/bid_lv[price][2][31]_i_1__1_n_0      | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/bid_lv[price][3][31]_i_1__1_n_0      | rst_n_IBUF_inst/O          |               12 |             32 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/bid_lv[size][3][31]_i_1__1_n_0       | rst_n_IBUF_inst/O          |               22 |             32 |         1.45 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/i___1_n_0                            | rst_n_IBUF_inst/O          |               16 |             32 |         2.00 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/i___2_n_0                            | rst_n_IBUF_inst/O          |               10 |             32 |         3.20 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/i___5__31_n_0                        | rst_n_IBUF_inst/O          |               26 |             32 |         1.23 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/i___7_n_0                            | rst_n_IBUF_inst/O          |               14 |             32 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_ask_lv[price][0][31]_i_1__1_n_0 | rst_n_IBUF_inst/O          |               12 |             32 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_ask_lv[price][1][31]_i_1__1_n_0 | rst_n_IBUF_inst/O          |               10 |             32 |         3.20 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_ask_lv[price][2][31]_i_1__1_n_0 | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_ask_lv[price][3][31]_i_1__1_n_0 | rst_n_IBUF_inst/O          |               11 |             32 |         2.91 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/bid_lv[size][3][31]_i_1_n_0          | rst_n_IBUF_inst/O          |               20 |             32 |         1.60 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_ask_lv[size][3][31]_i_1__1_n_0  | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/bid_lv[price][3][31]_i_1_n_0         | rst_n_IBUF_inst/O          |               13 |             32 |         2.46 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/decision_valid_i_6_0                 | rst_n_IBUF_inst/O          |               30 |             78 |         2.60 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/i___227_n_0                          | rst_n_IBUF_inst/O          |               36 |             96 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_ask_lv[size][0][31]_i_1_n_0     | rst_n_IBUF_inst/O          |               27 |             96 |         3.56 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/i___226_n_0                          | rst_n_IBUF_inst/O          |               44 |             96 |         2.18 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/i___226_n_0                          | rst_n_IBUF_inst/O          |               42 |             96 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/scan_bid_lv[size][0][31]_i_1_n_0     | rst_n_IBUF_inst/O          |               41 |             96 |         2.34 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/i___225_n_0                          | rst_n_IBUF_inst/O          |               44 |             96 |         2.18 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/i___226_n_0                          | rst_n_IBUF_inst/O          |               43 |             96 |         2.23 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_ask_lv[size][0][31]_i_1__0_n_0  | rst_n_IBUF_inst/O          |               31 |             96 |         3.10 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/scan_bid_lv[size][0][31]_i_1__0_n_0  | rst_n_IBUF_inst/O          |               36 |             96 |         2.67 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/i___225_n_0                          | rst_n_IBUF_inst/O          |               38 |             96 |         2.53 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_ask_lv[size][0][31]_i_1__2_n_0  | rst_n_IBUF_inst/O          |               27 |             96 |         3.56 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/i___225_n_0                          | rst_n_IBUF_inst/O          |               42 |             96 |         2.29 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/i___226_n_0                          | rst_n_IBUF_inst/O          |               40 |             96 |         2.40 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_ask_lv[size][0][31]_i_1__1_n_0  | rst_n_IBUF_inst/O          |               28 |             96 |         3.43 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/scan_bid_lv[size][0][31]_i_1__1_n_0  | rst_n_IBUF_inst/O          |               38 |             96 |         2.53 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/scan_bid_lv[size][0][31]_i_1__2_n_0  | rst_n_IBUF_inst/O          |               35 |             96 |         2.74 |
+|  clk_IBUF_BUFG | u_book/gbook[0].u_book/m_type[0]                            |                            |               65 |            202 |         3.11 |
+|  clk_IBUF_BUFG | u_book/gbook[2].u_book/m_type[0]                            |                            |               76 |            202 |         2.66 |
+|  clk_IBUF_BUFG | u_book/gbook[3].u_book/m_type[0]                            |                            |               75 |            202 |         2.69 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/m_type[0]                            |                            |               65 |            202 |         3.11 |
+|  clk_IBUF_BUFG | u_book/gbook[1].u_book/m_valid_reg_0[0]                     | rst_n_IBUF_inst/O          |              101 |            207 |         2.05 |
+|  clk_IBUF_BUFG | u_parser/msg_type[7]_i_1_n_0                                |                            |               98 |            217 |         2.21 |
+|  clk_IBUF_BUFG |                                                             | rst_n_IBUF_inst/O          |              683 |           1069 |         1.57 |
++----------------+-------------------------------------------------------------+----------------------------+------------------+----------------+--------------+
+
+

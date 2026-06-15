@@ -33,13 +33,16 @@ puts "INFO: synthesizing $top for part $part (out-of-context)"
 
 # ── Read RTL sources (order independent for synth; deps resolved by Vivado) ──
 set sources [list \
-    [file join $rtl_dir itch_parser.sv]       \
-    [file join $rtl_dir order_book_top.sv]    \
-    [file join $rtl_dir order_book_m2.sv]     \
-    [file join $rtl_dir strategy_imbalance.sv]\
-    [file join $rtl_dir latency_counter.sv]   \
-    [file join $rtl_dir tick_to_trade_top.sv] \
+    [file join $rtl_dir itch_parser.sv]         \
+    [file join $rtl_dir order_book_top.sv]      \
+    [file join $rtl_dir order_book_m2.sv]       \
+    [file join $rtl_dir strategy_imbalance.sv]  \
+    [file join $rtl_dir risk_check.sv]          \
+    [file join $rtl_dir latency_counter.sv]     \
+    [file join $rtl_dir tick_to_trade_top.sv]   \
 ]
+# For the multi-symbol build instead, set top=multi_symbol_top and also add:
+#   multi_symbol_book.sv, multi_symbol_top.sv
 foreach f $sources {
     if {![file exists $f]} { error "missing source: $f" }
     read_verilog -sv $f
@@ -48,26 +51,39 @@ foreach f $sources {
 # ── Read constraints ─────────────────────────────────────────────────────────
 read_xdc [file join $rtl_dir top.xdc]
 
-# ── Synthesize, out-of-context (I/O owned by the F1 Shell) ───────────────────
+# Where to write the comparison reports (results/synthesis, results/implementation)
+set res_synth [file join $repo_root results synthesis]
+set res_impl  [file join $repo_root results implementation]
+file mkdir $res_synth
+file mkdir $res_impl
+
+# ── Synthesis (out-of-context: I/O owned by the F1 Shell) ────────────────────
 synth_design -top $top -part $part -mode out_of_context -flatten_hierarchy rebuilt
+write_checkpoint -force [file join $out_dir ${top}_synth.dcp]
+report_utilization -file [file join $res_synth ${top}_utilization_synth.rpt]
 
-# ── Checkpoint ───────────────────────────────────────────────────────────────
-write_checkpoint -force [file join $out_dir ${top}.dcp]
+# ── Implementation: opt -> place -> route ────────────────────────────────────
+opt_design
+place_design
+route_design
+write_checkpoint -force [file join $out_dir ${top}_routed.dcp]
 
-# ── Reports ──────────────────────────────────────────────────────────────────
-report_timing_summary -file [file join $out_dir timing_summary.rpt] \
-    -max_paths 10 -delay_type min_max
-report_utilization    -file [file join $out_dir utilization.rpt]
+# ── Post-route reports (same set as the B0 baseline) ─────────────────────────
+report_timing_summary -file [file join $res_impl ${top}_timing_summary_routed.rpt] -max_paths 10
+report_utilization    -file [file join $res_impl ${top}_utilization_placed.rpt]
+report_power          -file [file join $res_impl ${top}_power_routed.rpt]
+report_drc            -file [file join $res_impl ${top}_drc_routed.rpt]
+report_route_status   -file [file join $res_impl ${top}_route_status.rpt]
 
-# ── Print the headline numbers to the console ────────────────────────────────
+# ── Headline to console ──────────────────────────────────────────────────────
 set wns [get_property SLACK [get_timing_paths -max_paths 1 -nworst 1 -setup]]
-puts "═══════════════════════════════════════════════════════════════"
-puts "  SYNTHESIS COMPLETE: $top @ 200 MHz (5.000 ns)"
+puts "==============================================================="
+puts "  IMPLEMENTATION COMPLETE: $top @ 200 MHz (5.000 ns), part $part"
 puts "  Worst Negative Slack (setup WNS): $wns ns"
 if {$wns >= 0} {
-    puts "  TIMING MET ✓  (design closes at 200 MHz)"
+    puts "  TIMING MET (design closes at 200 MHz)"
 } else {
-    puts "  TIMING VIOLATED ✗  (see build/timing_summary.rpt)"
+    puts "  TIMING VIOLATED (see results/implementation/${top}_timing_summary_routed.rpt)"
 }
-puts "  Reports: build/timing_summary.rpt  build/utilization.rpt"
-puts "═══════════════════════════════════════════════════════════════"
+puts "  Reports written to results/synthesis/ and results/implementation/"
+puts "==============================================================="

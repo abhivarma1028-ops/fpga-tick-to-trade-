@@ -25,6 +25,7 @@ CLK_PERIOD_NS = 5   # 200 MHz
 
 async def reset(dut, cycles: int = 8):
     dut.rst_n.value         = 0
+    dut.halt.value          = 0   # kill switch off
     dut.s_axis_tvalid.value = 0
     dut.s_axis_tdata.value  = 0
     dut.s_axis_tlast.value  = 0
@@ -294,3 +295,25 @@ async def test_backpressure_no_drop(dut):
     assert dec['order_price'] == 1_500_100
     assert stalled['seen'], "expected s_axis_tready to drop during RESCAN (backpressure)"
     dut._log.info("PASS  backpressure: post-RESCAN messages delivered, BUY fired")
+
+
+@cocotb.test()
+async def test_halt_blocks_decision(dut):
+    """With the kill-switch (halt) asserted, a strong imbalance must NOT produce a
+    decision on m_axis (the risk check blocks it); clearing halt lets it through."""
+    cocotb.start_soon(Clock(dut.clk, CLK_PERIOD_NS, unit='ns').start())
+    await reset(dut)
+    dut.halt.value = 1                       # kill switch ON
+
+    gen = SynthITCH()
+    await drive_framed(dut, gen.add(ref=1, side='S', shares=100, price=1_500_100))
+    await drive_framed(dut, gen.add(ref=2, side='B', shares=200, price=1_499_900))
+
+    # No decision should appear while halted
+    for _ in range(60):
+        await RisingEdge(dut.clk)
+        assert int(dut.m_axis_tvalid.value) == 0, "decision leaked while halted"
+        assert int(dut.risk_reject.value) == 0 or int(dut.risk_reason.value) == 4, \
+            "any reject while halted must be reason=HALT(4)"
+
+    dut._log.info("PASS  kill-switch blocks the order end-to-end")

@@ -17,9 +17,12 @@ RTL_DIR        := $(abspath ../rtl)
 VERILOG_SOURCES  = $(RTL_DIR)/itch_parser.sv
 VERILOG_SOURCES += $(RTL_DIR)/order_book_top.sv
 VERILOG_SOURCES += $(RTL_DIR)/order_book_m2.sv
+VERILOG_SOURCES += $(RTL_DIR)/multi_symbol_book.sv
 VERILOG_SOURCES += $(RTL_DIR)/strategy_imbalance.sv
+VERILOG_SOURCES += $(RTL_DIR)/risk_check.sv
 VERILOG_SOURCES += $(RTL_DIR)/latency_counter.sv
 VERILOG_SOURCES += $(RTL_DIR)/tick_to_trade_top.sv
+VERILOG_SOURCES += $(RTL_DIR)/multi_symbol_top.sv
 
 # SystemVerilog Assertions, bound to the DUTs. Questa only — the Verilator
 # smoke path and Vivado synthesis never see this file.

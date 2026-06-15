@@ -12,6 +12,7 @@ vlog -sv +acc \
     ../../rtl/itch_parser.sv \
     ../../rtl/order_book_m2.sv \
     ../../rtl/strategy_imbalance.sv \
+    ../../rtl/risk_check.sv \
     ../../rtl/latency_counter.sv \
     ../../rtl/tick_to_trade_top.sv \
     tb_tick_to_trade_top.sv
@@ -41,6 +42,11 @@ add wave -radix unsigned $tb/dut/u_book/best_ask_price $tb/dut/u_book/best_ask_s
 add wave -divider "Strategy decision"
 add wave $tb/dut/u_strategy/decision_valid $tb/dut/u_strategy/action
 add wave -radix unsigned $tb/dut/u_strategy/order_price $tb/dut/u_strategy/order_size
+
+add wave -divider "Risk check (15c3-5)"
+add wave $tb/halt $tb/dut/u_risk/out_valid $tb/dut/u_risk/reject_valid
+add wave -radix unsigned $tb/dut/u_risk/reject_reason
+add wave -radix decimal $tb/dut/u_risk/position
 
 add wave -divider "Latency counter"
 add wave -radix unsigned $tb/dut/u_lat/free_cnt $tb/dut/u_lat/t0

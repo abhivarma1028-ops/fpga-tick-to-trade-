@@ -31,7 +31,7 @@ ASK = 1  # sell side
 
 ORDER_DEPTH   = 256
 NLEVELS       = 4                 # mirrors RTL parameter default
-RESCAN_CYCLES = ORDER_DEPTH + 3   # safe margin for FSM + NBA settle
+RESCAN_CYCLES = ORDER_DEPTH + 8   # safe margin for FSM + NBA settle
 
 
 def level(dut, bus: str, i: int) -> int:
@@ -455,9 +455,13 @@ async def test_rescan_skipped_below_depth(dut):
     before = [level(dut, 'bid_level_price', i) for i in range(NLEVELS)]
     assert before == [1000_0000, 990_0000, 980_0000, 970_0000], f"got {before}"
 
-    # Delete the below-depth order (960): must SKIP rescan (stays IDLE)
+    # Delete the below-depth order (960): must SKIP rescan. With the BRAM book a
+    # C/D/E takes a 1-cycle LOOKUP; a *skipped* rescan returns to IDLE within a
+    # couple of cycles, whereas a real rescan would hold msg_ready low for ~256.
     await drive_msg(dut, DELETE, order_ref=5, side=BID, shares=0, price=0)
-    assert int(dut.msg_ready.value) == 1, "below-depth delete must skip RESCAN"
+    for _ in range(5):
+        await RisingEdge(dut.clk)
+    assert int(dut.msg_ready.value) == 1, "below-depth delete must skip RESCAN (idle quickly)"
     after = [level(dut, 'bid_level_price', i) for i in range(NLEVELS)]
     assert after == before, "below-depth delete must not change displayed levels"
 
