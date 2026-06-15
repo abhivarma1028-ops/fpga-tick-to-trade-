@@ -174,21 +174,52 @@ output pins, with no register in between. \texttt{risk\_check} was added as a
 \emph{zero-latency combinational} gate (to preserve 195\,ns); once the FF-array
 path was removed, this chain became the worst path.
 
-\section*{Planned fix --- Run B2 (register the risk/decision stage)}
+\section*{Correction --- Run B2 (register the risk/decision stage), measured}
 
-Make \texttt{risk\_check} a \textbf{1-cycle pipeline} (register its outputs) and
-register the decision output ports. This splits
-book\,$\rightarrow$\,strategy\,$\rightarrow$\,risk\,$\rightarrow$\,pin into short
-segments. Cost: \textbf{+1 cycle} (tick-to-trade 39\,$\rightarrow$\,40 cycles,
-195\,$\rightarrow$\,\textbf{200\,ns}); expected to finally close 200\,MHz
-(the worst path is $\sim$9.6\,ns of logic+route, splittable by one register).
+Made \texttt{risk\_check} a \textbf{1-cycle pipeline} (registered outputs) and
+registered the decision output ports, splitting
+book\,$\rightarrow$\,strategy\,$\rightarrow$\,risk\,$\rightarrow$\,pin. Cost:
+\textbf{+1 cycle} (39\,$\rightarrow$\,40 cycles, 195\,$\rightarrow$\,\textbf{200\,ns}).
+\texttt{tick\_to\_trade\_top} was re-synthesised + implemented on the VU9P:
 
-\noindent\textbf{Status:} the B2 register stage is now \emph{implemented} in
-\texttt{tick\_to\_trade\_top} (and \texttt{multi\_symbol\_top}) and verified in
-simulation --- tick-to-trade is now 40 cycles = \textbf{200\,ns}. It has \emph{not
-yet been re-synthesised}, so the \texttt{results/implementation/} reports still
-show the B1 numbers ($-4.563$\,ns, dest \texttt{risk\_reason}). Re-run synth+impl
-on \texttt{tick\_to\_trade\_top} to populate the real B2 timing.
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}l c c c@{}}
+\toprule
+\textbf{Metric} & \textbf{B1 (comb.\ risk)} & \textbf{B2 (registered)} & \textbf{Change} \\
+\midrule
+WNS                  & $-4.563$\,ns & \textbf{$-2.217$\,ns} & \textbf{+2.35\,ns} \;\checkmark \\
+Failing endpoints    & 3{,}612      & \textbf{87}           & $-$3{,}525 (98\% fewer) \\
+Worst-path dest.     & \texttt{risk\_reason} & \texttt{s\_axil\_awready} & moved off the trade path \\
+Worst-path logic     & 14 levels    & \textbf{2 levels} (LUT2+OBUF) & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\textbf{B2 closed the trading datapath.} The original decision cone
+(book\,$\rightarrow$\,strategy\,$\rightarrow$\,risk\,$\rightarrow$\,pin) no longer
+appears anywhere in the failing list. The residual $-2.217$\,ns is no longer a
+logic problem --- it is a \textbf{clock-insertion + I/O-budget artifact of the
+out-of-context run}:
+
+\begin{itemize}\itemsep2pt
+  \item The worst path (\texttt{s\_axil\_bvalid\_reg}\,$\rightarrow$\,\texttt{s\_axil\_awready},
+  the AXI-Lite latency-readout port) has only \textbf{2 logic levels} but rides
+  a \textbf{2.714\,ns clock-insertion delay} --- one global BUFG fanning out to
+  4{,}757 loads, i.e.\ 54\% of the 5\,ns period gone before any logic.
+  \item Insertion delay cancels on internal register\,$\rightarrow$\,register
+  paths (which meet 200\,MHz) but is charged in full against I/O paths. With the
+  former 40\% (2.0\,ns) I/O budget the boundary was unsatisfiable even though the
+  logic is fine.
+\end{itemize}
+
+\noindent\textbf{Fix (constraints, not RTL):} in \texttt{rtl/top.xdc} ---
+(1) \texttt{set\_false\_path} the whole \texttt{s\_axil\_*} boundary (a slow,
+host-polled status port, not a 200\,MHz datapath; the Shell closes its timing
+in-context); (2) right-size the boundary I/O budget 40\%\,$\rightarrow$\,10\%
+(0.5\,ns) to reflect that the real F1 build places the clock in clock regions
+(insertion $\sim$0.3\,ns) and the Shell registers the CL/SH interface. Re-run
+synth+impl to confirm; the internal logic already meets 200\,MHz.
 
 \textcolor{rulegray}{\rule{\linewidth}{1pt}}
 
@@ -276,8 +307,9 @@ yet re-synthesised} --- re-run synth+impl on \texttt{tick\_to\_trade\_top}
 B0 & registered FF order-book array          & $-2.373$\,ns & \fail\ (route-bound) \\
 B1 & \texttt{entries[]} $\to$ BRAM           & $-4.563$\,ns & \fail\ (combinational chain) \\
 M1 & multi-symbol $\times$4 (BRAM, comb.\ risk) & $-5.362$\,ns & \fail\ (chain + sym mux) \\
-B2 & register risk/decision stage            & TBD          & RTL done (200\,ns sim); \emph{re-run synth} \\
+B2 & register risk/decision stage            & $-2.217$\,ns & \fail\ I/O only --- \textbf{datapath closed}; 87 endpoints \\
 B3 & pipeline strategy (2-stage) + collar ref & TBD          & RTL done (205\,ns sim, 95/95); \emph{re-run synth} \\
+B4 & XDC: false-path AXI-Lite + 10\% I/O budget & TBD        & constraints done; \emph{re-run synth} \\
 \bottomrule
 \end{tabular}
 \end{center}

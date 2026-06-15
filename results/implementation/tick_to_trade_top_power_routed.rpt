@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
-| Date             : Mon Jun 15 16:15:06 2026
+| Date             : Mon Jun 15 22:16:15 2026
 | Host             : VM running 64-bit Ubuntu 26.04 LTS
 | Command          : report_power -file tick_to_trade_top_power_routed.rpt -pb tick_to_trade_top_power_summary_routed.pb -rpx tick_to_trade_top_power_routed.rpx
 | Design           : tick_to_trade_top
@@ -30,10 +30,10 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 2.607        |
+| Total On-Chip Power (W)  | 2.596        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 0.136        |
+| Dynamic (W)              | 0.126        |
 | Device Static (W)        | 2.470        |
 | Effective TJA (C/W)      | 0.5          |
 | Max Ambient (C)          | 98.6         |
@@ -52,19 +52,19 @@ Table of Contents
 +--------------------------+-----------+----------+-----------+-----------------+
 | On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
 +--------------------------+-----------+----------+-----------+-----------------+
-| Clocks                   |     0.023 |        3 |       --- |             --- |
-| CLB Logic                |     0.023 |    12968 |       --- |             --- |
-|   LUT as Logic           |     0.021 |     6786 |   1182240 |            0.57 |
-|   CARRY8                 |     0.002 |      287 |    147780 |            0.19 |
-|   Register               |    <0.001 |     4315 |   2364480 |            0.18 |
-|   LUT as Distributed RAM |    <0.001 |        8 |    591840 |           <0.01 |
-|   Others                 |     0.000 |       18 |       --- |             --- |
-|   F7/F8 Muxes            |     0.000 |      423 |   1182240 |            0.04 |
-| Signals                  |     0.028 |     9517 |       --- |             --- |
-| Block RAM                |     0.010 |        2 |      2160 |            0.09 |
+| Clocks                   |     0.027 |        3 |       --- |             --- |
+| CLB Logic                |     0.019 |    13668 |       --- |             --- |
+|   LUT as Logic           |     0.017 |     6909 |   1182240 |            0.58 |
+|   CARRY8                 |     0.001 |      295 |    147780 |            0.20 |
+|   LUT as Distributed RAM |     0.001 |      168 |    591840 |            0.03 |
+|   Register               |    <0.001 |     4585 |   2364480 |            0.19 |
+|   Others                 |     0.000 |       19 |       --- |             --- |
+|   F7/F8 Muxes            |     0.000 |      424 |   1182240 |            0.04 |
+| Signals                  |     0.021 |     9986 |       --- |             --- |
+| Block RAM                |     0.008 |      1.5 |      2160 |            0.07 |
 | I/O                      |     0.051 |      157 |       676 |           23.22 |
 | Static Power             |     2.470 |          |           |                 |
-| Total                    |     2.607 |          |           |                 |
+| Total                    |     2.596 |          |           |                 |
 +--------------------------+-----------+----------+-----------+-----------------+
 
 
@@ -74,9 +74,9 @@ Table of Contents
 +------------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source           | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +------------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint           |       0.850 |     0.907 |       0.099 |      0.808 |       NA    | Unspecified | NA         |
+| Vccint           |       0.850 |     0.895 |       0.087 |      0.808 |       NA    | Unspecified | NA         |
 | Vccint_io        |       0.850 |     0.264 |       0.001 |      0.262 |       NA    | Unspecified | NA         |
-| Vccbram          |       0.850 |     0.016 |       0.001 |      0.015 |       NA    | Unspecified | NA         |
+| Vccbram          |       0.850 |     0.016 |       0.000 |      0.015 |       NA    | Unspecified | NA         |
 | Vccaux           |       1.800 |     0.651 |       0.000 |      0.651 |       NA    | Unspecified | NA         |
 | Vccaux_io        |       1.800 |     0.206 |       0.021 |      0.185 |       NA    | Unspecified | NA         |
 | Vcco33           |       3.300 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
@@ -146,11 +146,11 @@ Table of Contents
 +-------------------+-----------+
 | Name              | Power (W) |
 +-------------------+-----------+
-| tick_to_trade_top |     0.136 |
-|   u_book          |     0.058 |
+| tick_to_trade_top |     0.126 |
+|   u_book          |     0.049 |
 |   u_lat           |     0.018 |
-|   u_parser        |     0.004 |
-|   u_strategy      |     0.003 |
+|   u_parser        |     0.003 |
+|   u_strategy      |     0.002 |
 +-------------------+-----------+
 
 

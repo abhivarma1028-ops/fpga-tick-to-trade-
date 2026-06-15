@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
-| Date         : Mon Jun 15 15:50:45 2026
+| Date         : Mon Jun 15 22:09:33 2026
 | Host         : VM running 64-bit Ubuntu 26.04 LTS
 | Command      : report_utilization -file tick_to_trade_top_utilization_synth.rpt -pb tick_to_trade_top_utilization_synth.pb
 | Design       : tick_to_trade_top
@@ -35,19 +35,19 @@ Table of Contents
 +----------------------------+------+-------+------------+-----------+-------+
 |          Site Type         | Used | Fixed | Prohibited | Available | Util% |
 +----------------------------+------+-------+------------+-----------+-------+
-| CLB LUTs*                  | 6900 |     0 |          0 |   1182240 |  0.58 |
-|   LUT as Logic             | 6892 |     0 |          0 |   1182240 |  0.58 |
-|   LUT as Memory            |    8 |     0 |          0 |    591840 | <0.01 |
-|     LUT as Distributed RAM |    8 |     0 |            |           |       |
+| CLB LUTs*                  | 7284 |     0 |          0 |   1182240 |  0.62 |
+|   LUT as Logic             | 7116 |     0 |          0 |   1182240 |  0.60 |
+|   LUT as Memory            |  168 |     0 |          0 |    591840 |  0.03 |
+|     LUT as Distributed RAM |  168 |     0 |            |           |       |
 |     LUT as Shift Register  |    0 |     0 |            |           |       |
-| CLB Registers              | 4258 |     0 |          0 |   2364480 |  0.18 |
-|   Register as Flip Flop    | 4258 |     0 |          0 |   2364480 |  0.18 |
+| CLB Registers              | 4570 |     0 |          0 |   2364480 |  0.19 |
+|   Register as Flip Flop    | 4570 |     0 |          0 |   2364480 |  0.19 |
 |   Register as Latch        |    0 |     0 |          0 |   2364480 |  0.00 |
-| CARRY8                     |  287 |     0 |          0 |    147780 |  0.19 |
-| F7 Muxes                   |  287 |     0 |          0 |    591120 |  0.05 |
-| F8 Muxes                   |  136 |     0 |          0 |    295560 |  0.05 |
+| CARRY8                     |  295 |     0 |          0 |    147780 |  0.20 |
+| F7 Muxes                   |  286 |     0 |          0 |    591120 |  0.05 |
+| F8 Muxes                   |  138 |     0 |          0 |    295560 |  0.05 |
 | F9 Muxes                   |    0 |     0 |          0 |    147780 |  0.00 |
-| Unique Control Sets        |  111 |       |          0 |    295560 |  0.04 |
+| Unique Control Sets        |  115 |       |          0 |    295560 |  0.04 |
 +----------------------------+------+-------+------------+-----------+-------+
 * Warning! The Final LUT count, after physical optimizations and full implementation, is typically lower. Run opt_design after synthesis, if not already completed, for a more realistic count.
 Warning! LUT value is adjusted to account for LUT combining.
@@ -68,9 +68,9 @@ Warning! For any ECO changes, please run place_design if there are unplaced inst
 | 0     |            _ |       Reset |            - |
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
-| 3856  |          Yes |           - |        Reset |
+| 4136  |          Yes |           - |        Reset |
 | 0     |          Yes |         Set |            - |
-| 402   |          Yes |       Reset |            - |
+| 434   |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -80,11 +80,11 @@ Warning! For any ECO changes, please run place_design if there are unplaced inst
 +-------------------+------+-------+------------+-----------+-------+
 |     Site Type     | Used | Fixed | Prohibited | Available | Util% |
 +-------------------+------+-------+------------+-----------+-------+
-| Block RAM Tile    |    2 |     0 |          0 |      2160 |  0.09 |
+| Block RAM Tile    |  1.5 |     0 |          0 |      2160 |  0.07 |
 |   RAMB36/FIFO*    |    1 |     0 |          0 |      2160 |  0.05 |
 |     RAMB36E2 only |    1 |       |            |           |       |
-|   RAMB18          |    2 |     0 |          0 |      4320 |  0.05 |
-|     RAMB18E2 only |    2 |       |            |           |       |
+|   RAMB18          |    1 |     0 |          0 |      4320 |  0.02 |
+|     RAMB18E2 only |    1 |       |            |           |       |
 | URAM              |    0 |     0 |          0 |       960 |  0.00 |
 +-------------------+------+-------+------------+-----------+-------+
 * Note: Each Block RAM Tile only has one FIFO logic available and therefore can accommodate only one FIFO36E2 or one FIFO18E2. However, if a FIFO18E2 occupies a Block RAM Tile, that tile can still accommodate a RAMB18E2
@@ -174,23 +174,23 @@ Warning! For any ECO changes, please run place_design if there are unplaced inst
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDCE     | 3856 |            Register |
-| LUT6     | 3697 |                 CLB |
-| LUT4     | 1348 |                 CLB |
-| LUT2     | 1053 |                 CLB |
-| LUT3     |  946 |                 CLB |
-| LUT5     |  784 |                 CLB |
-| FDRE     |  402 |            Register |
-| MUXF7    |  287 |                 CLB |
-| CARRY8   |  287 |                 CLB |
-| MUXF8    |  136 |                 CLB |
+| FDCE     | 4136 |            Register |
+| LUT6     | 3889 |                 CLB |
+| LUT4     | 1402 |                 CLB |
+| LUT3     | 1292 |                 CLB |
+| LUT2     |  799 |                 CLB |
+| LUT5     |  710 |                 CLB |
+| FDRE     |  434 |            Register |
+| CARRY8   |  295 |                 CLB |
+| MUXF7    |  286 |                 CLB |
+| RAMD64E  |  168 |                 CLB |
+| MUXF8    |  138 |                 CLB |
 | OBUF     |  120 |                 I/O |
 | LUT1     |   86 |                 CLB |
 | INBUF    |   37 |                 I/O |
 | IBUFCTRL |   37 |              Others |
-| RAMD64E  |    8 |                 CLB |
-| RAMB18E2 |    2 |            BLOCKRAM |
 | RAMB36E2 |    1 |            BLOCKRAM |
+| RAMB18E2 |    1 |            BLOCKRAM |
 | BUFGCE   |    1 |               Clock |
 +----------+------+---------------------+
 
