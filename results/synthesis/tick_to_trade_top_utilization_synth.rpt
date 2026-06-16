@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
-| Date         : Mon Jun 15 22:09:33 2026
+| Date         : Tue Jun 16 01:05:54 2026
 | Host         : VM running 64-bit Ubuntu 26.04 LTS
 | Command      : report_utilization -file tick_to_trade_top_utilization_synth.rpt -pb tick_to_trade_top_utilization_synth.pb
 | Design       : tick_to_trade_top
@@ -35,8 +35,8 @@ Table of Contents
 +----------------------------+------+-------+------------+-----------+-------+
 |          Site Type         | Used | Fixed | Prohibited | Available | Util% |
 +----------------------------+------+-------+------------+-----------+-------+
-| CLB LUTs*                  | 7284 |     0 |          0 |   1182240 |  0.62 |
-|   LUT as Logic             | 7116 |     0 |          0 |   1182240 |  0.60 |
+| CLB LUTs*                  | 7201 |     0 |          0 |   1182240 |  0.61 |
+|   LUT as Logic             | 7033 |     0 |          0 |   1182240 |  0.59 |
 |   LUT as Memory            |  168 |     0 |          0 |    591840 |  0.03 |
 |     LUT as Distributed RAM |  168 |     0 |            |           |       |
 |     LUT as Shift Register  |    0 |     0 |            |           |       |
@@ -175,9 +175,9 @@ Warning! For any ECO changes, please run place_design if there are unplaced inst
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
 | FDCE     | 4136 |            Register |
-| LUT6     | 3889 |                 CLB |
+| LUT6     | 3888 |                 CLB |
 | LUT4     | 1402 |                 CLB |
-| LUT3     | 1292 |                 CLB |
+| LUT3     | 1293 |                 CLB |
 | LUT2     |  799 |                 CLB |
 | LUT5     |  710 |                 CLB |
 | FDRE     |  434 |            Register |

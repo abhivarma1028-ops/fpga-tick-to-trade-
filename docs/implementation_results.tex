@@ -297,6 +297,57 @@ yet re-synthesised} --- re-run synth+impl on \texttt{tick\_to\_trade\_top}
 (then \texttt{multi\_symbol\_top}) to populate the real B3 timing and confirm
 200\,MHz closure.
 
+\textcolor{rulegray}{\rule{\linewidth}{1pt}}
+
+\section*{Correction 4 --- Run B4 (XDC: false-path AXI-Lite + 10\% I/O budget), measured}
+
+Re-synthesised + implemented \texttt{tick\_to\_trade\_top} with the B4 constraints
+fix. The AXI-Lite false-path + 10\% I/O budget corrected most of the B2 I/O
+violations:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}l c c c@{}}
+\toprule
+\textbf{Metric} & \textbf{B2} & \textbf{B4} & \textbf{Change} \\
+\midrule
+WNS                  & $-2.217$\,ns & \textbf{$-0.578$\,ns} & \textbf{+1.64\,ns} \;\checkmark \\
+Failing endpoints    & 87           & \textbf{47}           & $-$40 \\
+Worst-path logic     & 2 levels (AXI-Lite) & \textbf{1--2 levels (FF$\to$OBUF)} & all FF-to-output pins \\
+Internal reg$\to$reg & meets 200\,MHz & meets 200\,MHz & \textbf{confirmed} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\textbf{Remaining 47 violations are all FF$\to$OBUF paths with 0--1
+logic levels:}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}l l c r@{}}
+\toprule
+\textbf{Destination (output pin)} & \textbf{Source (FF)} & \textbf{Levels} & \textbf{Slack} \\
+\midrule
+\texttt{s\_axis\_tready}   & \texttt{u\_book/state\_reg[0]} & 2 (LUT3+OBUF) & $-0.578$\,ns \\
+\texttt{risk\_reason[0]}   & \texttt{risk\_reason\_reg[0]}  & 1 (OBUF)      & $-0.461$\,ns \\
+\texttt{m\_axis\_tdata[*]} & \texttt{m\_axis\_tdata\_reg[*]}& 1 (OBUF)      & $\sim$$-0.44$\,ns \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\textbf{Root cause (unchanged):} OOC BUFG clock insertion 2.658\,ns
+across fanout $\sim$4,752 loads. This delay is charged in full on FF$\to$output-pin
+paths even after the I/O budget reduction, because the OBUF propagation
+($\sim$1.1\,ns) + insertion (2.658\,ns) $\approx$ 3.76\,ns exceeds the 0.5\,ns
+required budget. In the real F1 build the Shell registers every CL/SH boundary
+port and the clock is placed in clock regions (insertion $\sim$0.3\,ns); these
+paths do not exist in-context.
+
+\noindent\textbf{Fix (B5):} false-path \emph{all} remaining CL/SH boundary
+ports (\texttt{s\_axis\_*}, \texttt{m\_axis\_*}, \texttt{risk\_*},
+\texttt{halt}) so STA evaluates only internal register$\to$register paths, which
+already meet 200\,MHz. The \texttt{top.xdc} has been updated accordingly.
+
 \section*{Run history}
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
@@ -309,7 +360,8 @@ B1 & \texttt{entries[]} $\to$ BRAM           & $-4.563$\,ns & \fail\ (combinatio
 M1 & multi-symbol $\times$4 (BRAM, comb.\ risk) & $-5.362$\,ns & \fail\ (chain + sym mux) \\
 B2 & register risk/decision stage            & $-2.217$\,ns & \fail\ I/O only --- \textbf{datapath closed}; 87 endpoints \\
 B3 & pipeline strategy (2-stage) + collar ref & TBD          & RTL done (205\,ns sim, 95/95); \emph{re-run synth} \\
-B4 & XDC: false-path AXI-Lite + 10\% I/O budget & TBD        & constraints done; \emph{re-run synth} \\
+B4 & XDC: false-path AXI-Lite + 10\% I/O budget & $-0.578$\,ns & \fail\ FF$\to$OBUF only (47 eps); internal logic \textbf{MEETS} 200\,MHz \\
+B5 & XDC: false-path all CL/SH boundary ports  & TBD          & constraints done; \emph{re-run synth} \\
 \bottomrule
 \end{tabular}
 \end{center}
